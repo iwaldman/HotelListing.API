@@ -79,3 +79,9 @@ Please ensure that your contributions adhere to the repository's code of conduct
 ## License
 
 This repository is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+
+## Migrations
+
+Add-Migration InitialCreate -Context HotelListingDbContext -OutputDir Data/Migrations
+Remove-Migration -Context HotelListingDbContext
+Update-Database -Context HotelListingDbContext
