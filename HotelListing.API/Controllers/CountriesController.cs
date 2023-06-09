@@ -1,4 +1,5 @@
-﻿using HotelListing.API.Data;
+﻿using AutoMapper;
+using HotelListing.API.Data;
 using HotelListing.API.Models.Country;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,12 @@ namespace HotelListing.API.Controllers;
 public class CountriesController : ControllerBase
 {
     private readonly HotelListingDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CountriesController(HotelListingDbContext context)
+    public CountriesController(HotelListingDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     // GET: api/Countries
@@ -91,11 +94,7 @@ public class CountriesController : ControllerBase
             return Problem("Entity set 'HotelListingDbContext.Countries'  is null.");
         }
 
-        var country = new Country
-        {
-            Name = createCountry.Name,
-            ShortName = createCountry.ShortName
-        };
+        var country = _mapper.Map<Country>(createCountry);
 
         _context.Countries.Add(country);
         await _context.SaveChangesAsync();
