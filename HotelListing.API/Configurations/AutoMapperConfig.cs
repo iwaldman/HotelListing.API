@@ -24,5 +24,9 @@ public class AutoMapperConfig : Profile
         // Map Hotel to HotelDto
         CreateMap<Hotel, HotelDto>()
             .ReverseMap();
+
+        // Map Country to UpdateCountryDto
+        CreateMap<Country, UpdateCountryDto>()
+            .ReverseMap();
     }
 }

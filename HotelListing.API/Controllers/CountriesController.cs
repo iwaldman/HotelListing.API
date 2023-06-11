@@ -23,7 +23,7 @@ public class CountriesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
     {
-        if (_context.Countries == null)
+        if (_context.Countries is null)
         {
             return NotFound();
         }
@@ -43,7 +43,7 @@ public class CountriesController : ControllerBase
             return BadRequest();
         }
 
-        if (_context.Countries == null)
+        if (_context.Countries is null)
         {
             return NotFound();
         }
@@ -52,7 +52,7 @@ public class CountriesController : ControllerBase
             .Include(c => c.Hotels)
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        if (country == null)
+        if (country is null)
         {
             return NotFound();
         }
@@ -65,14 +65,26 @@ public class CountriesController : ControllerBase
     // PUT: api/Countries/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutCountry(int id, Country country)
+    public async Task<IActionResult> PutCountry(int id, UpdateCountryDto updateCountryDto)
     {
-        if (id != country.Id)
+        if (id != updateCountryDto.Id)
         {
             return BadRequest();
         }
 
-        _context.Entry(country).State = EntityState.Modified;
+        if (_context.Countries is null)
+        {
+            return NotFound();
+        }
+
+        var country = await _context.Countries.FindAsync(id);
+
+        if (country is null)
+        {
+            return NotFound();
+        }
+
+        _mapper.Map(updateCountryDto, country);
 
         try
         {
@@ -103,7 +115,7 @@ public class CountriesController : ControllerBase
             throw new ArgumentNullException(nameof(createCountry));
         }
 
-        if (_context.Countries == null)
+        if (_context.Countries is null)
         {
             return Problem("Entity set 'HotelListingDbContext.Countries'  is null.");
         }
@@ -120,12 +132,12 @@ public class CountriesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCountry(int id)
     {
-        if (_context.Countries == null)
+        if (_context.Countries is null)
         {
             return NotFound();
         }
         var country = await _context.Countries.FindAsync(id);
-        if (country == null)
+        if (country is null)
         {
             return NotFound();
         }
