@@ -21,31 +21,45 @@ public class CountriesController : ControllerBase
 
     // GET: api/Countries
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+    public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
     {
         if (_context.Countries == null)
         {
             return NotFound();
         }
-        return await _context.Countries.ToListAsync();
+
+        var countries = await _context.Countries.ToListAsync();
+        var countriesDto = _mapper.Map<IEnumerable<GetCountryDto>>(countries);
+
+        return Ok(countriesDto);
     }
 
     // GET: api/Countries/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Country>> GetCountry(int id)
     {
+        if (id <= 0)
+        {
+            return BadRequest();
+        }
+
         if (_context.Countries == null)
         {
             return NotFound();
         }
-        var country = await _context.Countries.FindAsync(id);
+
+        var country = await _context.Countries
+            .Include(c => c.Hotels)
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (country == null)
         {
             return NotFound();
         }
 
-        return country;
+        var countryDto = _mapper.Map<CountryDto>(country);
+
+        return Ok(countryDto);
     }
 
     // PUT: api/Countries/5

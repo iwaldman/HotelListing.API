@@ -2,6 +2,9 @@
 
 namespace HotelListing.API.Models.Country;
 
+/// <summary>
+/// CreateCountryDto is a data transfer object (DTO) class for used for creating or updating country information.
+/// </summary>
 public class CreateCountryDto
 {
     [Required]
