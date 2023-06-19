@@ -1,0 +1,73 @@
+﻿@HotelListing.API_HostAddress = https://localhost:7102
+
+GET {{HotelListing.API_HostAddress}}/api/countries
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/countries/0
+
+###
+
+DELETE {{HotelListing.API_HostAddress}}/api/countries/5
+
+###
+
+PUT {{HotelListing.API_HostAddress}}/api/countries/5
+Content-Type: application/json
+
+{
+  "id": 5,
+"name": "Marshall Islands",
+  "shortName": "MH"
+
+}
+
+###
+
+POST {{HotelListing.API_HostAddress}}/api/countries
+Content-Type: application/json
+
+{
+  "name": "Marshall Islands",
+  "shortName": "MH"
+}
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/hotels
+
+###
+
+GET {{HotelListing.API_HostAddress}}/api/hotels/3
+
+###
+
+POST {{HotelListing.API_HostAddress}}/api/hotels
+Content-Type: application/json
+
+{
+  "name": "Funky Town",
+  "address": "Negril",
+  "rating": 4.5,
+  "countryId": 1
+}
+
+###
+
+PUT {{HotelListing.API_HostAddress}}/api/hotels/5
+Content-Type: application/json
+
+{
+  "id": 5,
+  "name": "Funky Town 2",
+  "address": "Negril",
+  "rating": 4.5,
+  "countryId": 1
+
+}
+
+###
+
+DELETE {{HotelListing.API_HostAddress}}/api/hotels/5
+
+###

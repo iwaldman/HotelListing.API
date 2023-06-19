@@ -9,24 +9,32 @@ public class AutoMapperConfig : Profile
 {
     public AutoMapperConfig()
     {
-        // Map from Country to CountryDTO
+        // Map from Country to CreateCountryDto
         CreateMap<Country, CreateCountryDto>()
             .ReverseMap();
 
-        // Map from Country to CountryDTO
+        // Map from Country to GetCountryDto
         CreateMap<Country, GetCountryDto>()
-            .ReverseMap();
-
-        // Map from Country to CountryDTO
-        CreateMap<Country, CountryDto>()
-            .ReverseMap();
-
-        // Map Hotel to HotelDto
-        CreateMap<Hotel, HotelDto>()
             .ReverseMap();
 
         // Map Country to UpdateCountryDto
         CreateMap<Country, UpdateCountryDto>()
+            .ReverseMap();
+
+        // Map Hotel to UpdateHotelDto
+        CreateMap<Hotel, UpdateHotelDto>()
+            .ReverseMap();
+
+        // Map Hotel to CreateHotelDto
+        CreateMap<Hotel, CreateHotelDto>()
+            .ReverseMap();
+
+        // Map Hotel to GetHotelDto
+        CreateMap<Hotel, GetHotelDto>()
+            .ReverseMap();
+
+        // Map Hotel to HotelDto
+        CreateMap<Hotel, HotelDto>()
             .ReverseMap();
     }
 }

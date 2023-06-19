@@ -25,14 +25,14 @@ public class CountriesController : ControllerBase
     public async Task<ActionResult<IEnumerable<GetCountryDto>>> GetCountries()
     {
         var countries = await _countriesRepository.GetAllAsync();
-        var countriesDto = _mapper.Map<IEnumerable<GetCountryDto>>(countries);
+        var countryDtos = _mapper.Map<IEnumerable<GetCountryDto>>(countries);
 
-        return Ok(countriesDto);
+        return Ok(countryDtos);
     }
 
     // GET: api/Countries/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<Country>> GetCountry(int id)
+    public async Task<ActionResult<GetCountryDto>> GetCountry(int id)
     {
         if (id <= 0)
         {
@@ -46,7 +46,7 @@ public class CountriesController : ControllerBase
             return NotFound();
         }
 
-        var countryDto = _mapper.Map<CountryDto>(country);
+        var countryDto = _mapper.Map<GetCountryDto>(country);
 
         return Ok(countryDto);
     }
@@ -97,7 +97,7 @@ public class CountriesController : ControllerBase
     {
         if (createCountry is null)
         {
-            throw new ArgumentNullException(nameof(createCountry));
+            return BadRequest();
         }
 
         var country = _mapper.Map<Country>(createCountry);
