@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.API.Data;
 
 /// <summary>
 /// Represents a database context for hotel listings.
 /// </summary>
-public class HotelListingDbContext : DbContext
+public class HotelListingDbContext : IdentityDbContext<ApiUser>
 {
     public HotelListingDbContext(DbContextOptions options)
         : base(options) { }
