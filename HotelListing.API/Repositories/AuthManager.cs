@@ -24,6 +24,11 @@ public class AuthManager : IAuthManager
 
         var result = await _userManager.CreateAsync(user, apiUserDto.Password);
 
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(user, "user");
+        }
+
         return result.Errors;
     }
 }
