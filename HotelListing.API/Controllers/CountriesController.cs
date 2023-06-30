@@ -2,6 +2,7 @@
 using HotelListing.API.Contracts;
 using HotelListing.API.Data;
 using HotelListing.API.Models.Country;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ namespace HotelListing.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CountriesController : ControllerBase
 {
     private readonly ICountriesRepository _countriesRepository;
