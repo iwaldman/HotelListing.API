@@ -53,4 +53,21 @@ public class AccountController : ControllerBase
 
         return Ok(authResponse);
     }
+
+    // POST: api/account/refresh
+    [HttpPost("refresh")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> Refresh([FromBody] AuthResponseDto authResponseDto)
+    {
+        var authResponse = await _authManager.VerifyRefreshToken(authResponseDto);
+
+        if (authResponse is null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(authResponse);
+    }
 }
