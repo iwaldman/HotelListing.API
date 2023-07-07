@@ -8,11 +8,14 @@ namespace HotelListing.API.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
+    // Dependency Injected
     private readonly IAuthManager _authManager;
+    private readonly ILogger<AccountController> _logger;
 
-    public AccountController(IAuthManager authManager)
+    public AccountController(IAuthManager authManager, ILogger<AccountController> logger)
     {
         _authManager = authManager;
+        _logger = logger;
     }
 
     // POST: api/account/register
@@ -22,19 +25,37 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Register([FromBody] ApiUserDto apiUserDto)
     {
-        var errors = await _authManager.Register(apiUserDto);
+        _logger.LogInformation($"Registration Attempt for {apiUserDto.Email}");
 
-        if (errors.Any())
+        try
         {
-            foreach (var error in errors)
+            var errors = await _authManager.Register(apiUserDto);
+
+            if (errors.Any())
             {
-                ModelState.AddModelError(error.Code, error.Description);
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+
+                return BadRequest(ModelState);
             }
 
-            return BadRequest(ModelState);
+            return Ok();
         }
+        catch (Exception ex)
+        {
+            // log exception
+            _logger.LogError(
+                ex,
+                $"Something went wrong in the {nameof(Register)} - {apiUserDto.Email}"
+            );
 
-        return Ok();
+            return Problem(
+                $"Something went wrong in the {nameof(Register)}",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
     }
 
     // POST: api/account/login
@@ -44,14 +65,29 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Login([FromBody] LoginDto loginDto)
     {
-        var authResponse = await _authManager.Login(loginDto);
+        _logger.LogInformation($"Login Attempt for {loginDto.Email}");
 
-        if (authResponse is null)
+        try
         {
-            return Unauthorized();
-        }
+            var authResponse = await _authManager.Login(loginDto);
 
-        return Ok(authResponse);
+            if (authResponse is null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(authResponse);
+        }
+        catch (Exception ex)
+        {
+            // log exception
+            _logger.LogError(ex, $"Something went wrong in the {nameof(Login)} - {loginDto.Email}");
+
+            return Problem(
+                $"Something went wrong in the {nameof(Login)}",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
     }
 
     // POST: api/account/refresh
@@ -61,13 +97,31 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> Refresh([FromBody] AuthResponseDto authResponseDto)
     {
-        var authResponse = await _authManager.VerifyRefreshToken(authResponseDto);
+        _logger.LogInformation($"Refresh Attempt for {authResponseDto.UserId}");
 
-        if (authResponse is null)
+        try
         {
-            return Unauthorized();
-        }
+            var authResponse = await _authManager.VerifyRefreshToken(authResponseDto);
 
-        return Ok(authResponse);
+            if (authResponse is null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(authResponse);
+        }
+        catch (Exception ex)
+        {
+            // log exception
+            _logger.LogError(
+                ex,
+                $"Something went wrong in the {nameof(Refresh)} - {authResponseDto.UserId}"
+            );
+
+            return Problem(
+                $"Something went wrong in the {nameof(Refresh)}",
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
     }
 }

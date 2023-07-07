@@ -15,11 +15,17 @@ public class CountriesController : ControllerBase
 {
     private readonly ICountriesRepository _countriesRepository;
     private readonly IMapper _mapper;
+    private readonly ILogger<CountriesController> _logger;
 
-    public CountriesController(ICountriesRepository countriesRepository, IMapper mapper)
+    public CountriesController(
+        ICountriesRepository countriesRepository,
+        IMapper mapper,
+        ILogger<CountriesController> logger
+    )
     {
         _countriesRepository = countriesRepository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     // GET: api/Countries
@@ -54,7 +60,6 @@ public class CountriesController : ControllerBase
     }
 
     // PUT: api/Countries/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> PutCountry(int id, UpdateCountryDto updateCountryDto)
@@ -68,6 +73,8 @@ public class CountriesController : ControllerBase
 
         if (country is null)
         {
+            _logger.LogWarning($"Country with id: {id} was not found.");
+
             return NotFound();
         }
 
